@@ -21,8 +21,8 @@ function RegisterUser() {
   const [emailSent, setEmailSent] = useState(false); //인증보내기 버튼
 
   const [confirmNickname, setConfirmNickname] = useState("");//nickname
-  
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [nickBackground, setNickBackground] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState('');
   const [isButtonDisabled1, setIsButtonDisabled1] = useState(false);
   const [swithUser, setNewUser] = useState({
     email: "",
@@ -62,6 +62,12 @@ function RegisterUser() {
     const seconds = timeInSec % 60; //초
     return `${String(minutes).padStart(1,'0')}:${String(seconds).padStart(2,'0')}}`;
   };
+  // 유효시간이 0일 때 isVisible 상태를 false로 변경
+  useEffect(() => {
+    if (countTime === 0) {
+      setIsVisible(false);
+    }
+  }, [countTime]);
 
   const handleAgreementChange = (e) => {
     // 개별 동의
@@ -152,9 +158,11 @@ function RegisterUser() {
       if (response.data !== "existsNick") {
         alert("사용 가능한 닉네임입니다.");
         setConfirmNickname("new");
+        setNickBackground(true);//색상 변경용
       } else if (response.data === "existsNick") {
         alert("이미 존재하는 닉네임입니다.");
         setConfirmNickname("existsNick");
+        setNickBackground(false);//색상 변경용
       }
     } catch (error) {
       console.error("닉네임이 부적합합니다.", error);
@@ -190,7 +198,7 @@ function RegisterUser() {
     if (swithUser.password === confirmPassword) {
       // Check if the password meets the regex pattern
       if (passwordRegex.test(confirmPassword)) {
-        alert("비밀번호가 일치하며 조건에 부합합니다.");
+        alert("비밀번호가 일치합니다.");
         setIsButtonDisabled1(true);
       } else {
         alert("비밀번호가 일치하지만 조건에 부합하지 않습니다.");
@@ -240,7 +248,7 @@ function RegisterUser() {
       isButtonDisabled === true &&
       swithUser.password !== confirmPassword
     ) {
-      alert("비밀번호가 일치하지않습니다. 확인해주세요");
+      alert("비밀번호를 확인해주세요");
     } else {
       alert("모든 인증을 확인해주세요");
       console.log(confirmNickname);
@@ -294,7 +302,7 @@ function RegisterUser() {
                 onClick={handleEmail}
                 className={`btn round ${emailSent? 'resend':'confirmed'}`}
                 style={{
-                  backgroundColor: emailSent ? "#aaffa5": (isButtonDisabled ? "#b9eeff": "#ffffb5"),
+                  backgroundColor: emailSent ? "#b9eeff":  "#ffffb5",
                   width: "170px",
                   height: "50px",
                   margin: "10px",
@@ -305,7 +313,7 @@ function RegisterUser() {
                   fontSize: "18px",
                 }}
               >
-                {emailSent ? '재전송': (isButtonDisabled ? '인증 완료': '이메일 인증하기')}
+                {isButtonDisabled ? '인증 완료' : (emailSent ? '재전송' : '이메일 인증하기')}
                 
               </button>
              
@@ -379,7 +387,7 @@ function RegisterUser() {
                 onClick={handleConfirmPassword}
                 className="btn round"
                 style={{
-                  backgroundColor: "#ffffb5",
+                  backgroundColor: isButtonDisabled1 ? "#b9eeff":  "#ffffb5",
                   width: "170px",
                   height: "50px",
                   margin: "10px",
@@ -390,8 +398,10 @@ function RegisterUser() {
                   fontSize: "18px",
                 }}
               >
-                비밀번호 일치확인
+               
+                {isButtonDisabled1 ? '비밀번호 일치' : '비밀번호 일치확인'}
               </button>
+               
             </div>
           </div>
 
@@ -433,7 +443,7 @@ function RegisterUser() {
                 onClick={handleNickname}
                 className="btn round"
                 style={{
-                  backgroundColor: "#ffffb5",
+                  backgroundColor: nickBackground? "#b9eeff":"#ffffb5",
                   width: "170px",
                   height: "50px",
                   margin: "10px",

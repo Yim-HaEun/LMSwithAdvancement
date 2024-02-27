@@ -6,6 +6,7 @@
 		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
 		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
 		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="C:\Users\gkdms\OneDrive\바탕 화면\Advancement\final-project-master\Swith"/>
 			<item value="C:\Users\user1\final-project\Swith"/>
 		</list>
 	</section>
