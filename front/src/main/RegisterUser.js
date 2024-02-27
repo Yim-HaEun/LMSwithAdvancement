@@ -68,31 +68,41 @@ function RegisterUser() {
       setIsVisible(false);
     }
   }, [countTime]);
-
   const handleAgreementChange = (e) => {
     // 개별 동의
     const { name, checked } = e.target;
-     setAgreements((prevAgreements) => {
-    const updatedAgreements = { ...prevAgreements, [name]: checked };
-
-    const allChecked = Object.values(updatedAgreements).every((value) => value === true);
-
-    if (allChecked) {
-      setAllAgree(checked);
-    }
-
-    return updatedAgreements;
-  });
+    setAgreements((prevAgreements) => {
+      const updatedAgreements = { ...prevAgreements, [name]: checked };
+  
+      const allChecked = Object.values(updatedAgreements).every((value) => value === true);
+  
+      // 개별 동의 체크박스가 모두 체크되었을 때만 전체 동의 체크박스가 체크되도록 변경
+      setAllAgree(allChecked);
+  
+      return updatedAgreements;
+    });
   };
-
+  
   const handleAllAgreementChange = (e) => {
     const { checked } = e.target;
-    setAgreements((prevAgreements) =>
-      Object.keys(prevAgreements).reduce((newAgreements, AgreementKey) => ({
-        ...newAgreements,
-        [AgreementKey]: checked,
-      }))
-    );
+  
+    // 전체 동의 체크박스가 체크되었을 때만 개별 동의 체크박스들을 체크 상태로 변경
+    if (checked) {
+      setAgreements({
+        terms: true,
+        personalInfo: true,
+        provision: true,
+        location: true,
+      });
+    } else {
+      setAgreements({
+        terms: false,
+        personalInfo: false,
+        provision: false,
+        location: false,
+      });
+    }
+  
     setAllAgree(checked);
   };
 
