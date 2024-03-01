@@ -24,6 +24,7 @@ function RegisterUser() {
   const [nickBackground, setNickBackground] = useState(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState('');
   const [isButtonDisabled1, setIsButtonDisabled1] = useState(false);
+  const [isRegex, setIsRegex] = useState(false);
   const [swithUser, setNewUser] = useState({
     email: "",
     password: "",
@@ -206,7 +207,6 @@ function RegisterUser() {
     const passwordRegex =
       /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~?!@#$%^&*_-]).{8,}$/;
     if (swithUser.password === confirmPassword) {
-      // Check if the password meets the regex pattern
       if (passwordRegex.test(confirmPassword)) {
         alert("비밀번호가 일치합니다.");
         setIsButtonDisabled1(true);
@@ -219,7 +219,28 @@ function RegisterUser() {
   };
   const handlePasswordChange = (e) => {
     const { value } = e.target;
+
+    
     setConfirmPassword(value);
+
+   
+  };
+
+  const handleInputChange1 = (e) => {
+    const { value } = e.target;
+    const passwordRegex = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~?!@#$%^&*_-]).{8,}$/;
+    const isPasswordValid = passwordRegex.test(value);
+  
+    setNewUser(prevUser => ({
+      ...prevUser,
+      password: value,
+    }));
+  
+    if (isPasswordValid) {
+      setIsRegex(true);
+    } else {
+      setIsRegex(false);
+    }
   };
 
   const handleAddUser = async () => {
@@ -264,6 +285,7 @@ function RegisterUser() {
       console.log(confirmNickname);
     }
   };
+
   //profile
   const handleImageChange = (e) => {
     const file = e.target.files[0]; // 선택한 파일
@@ -366,7 +388,8 @@ function RegisterUser() {
                 비밀번호(password)
                 <img src={Required} className="required_img" />
               </h4>
-              <p className="register_password_massage">
+              <p className="register_password_massage"
+              style={{color: isRegex ? "#000000":"#aaaa"}}>
                 영문자,숫자,특수문자를 포함한 8자 이상의 비밀번호
               </p>
             </div>
@@ -377,7 +400,7 @@ function RegisterUser() {
               name="password"
               value={swithUser.password}
               autoComplete="off"
-              onChange={handleInputChange}
+              onChange={handleInputChange1}
               required
             />
             <br />
@@ -445,7 +468,7 @@ function RegisterUser() {
                 type="text"
                 name="nickname"
                 value={swithUser.nickname}
-                onChange={handleInputChange}
+                onChange={handleInputChange1}
                 required
               />
 
