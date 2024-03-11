@@ -12,6 +12,7 @@ import ModifyPage from './ModifyPage';
 import ChattingPage from './Chatting/pages/ChattingPage';
 import FindUser from './FindUser';
 import Admin from './Admin';
+import Kakao from './Kakao';
 // function AuthenticatedRoute({ children }) {
 //   const authContext = useAuth();
 
@@ -37,6 +38,7 @@ export default function Control() {
           <Route path="chat/:post_no" element={<ChattingPage />} />
           <Route path="find" element={<FindUser />} />
           <Route path="admin" element={<Admin />} />
+          <Route path ="kakao" element={<Kakao/>}/>
         </Routes>
       </BrowserRouter>
     </div>

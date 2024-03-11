@@ -57,6 +57,17 @@ function Login() {
       }
     }
   };
+  
+    const Rest_api_key='1d11454b9e54fe7498a59635e8d3f681' //REST API KEY
+    const redirect_uri = 'http://localhost:3000/kakao/oauth' //Redirect URI
+    // oauth 요청 URL
+    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`
+    const handleKakaoLogin = ()=>{
+        window.location.href = kakaoURL
+        checkLoginStatus();
+        navigate("/"); 
+
+  }
 
   return (
     <div>
@@ -121,7 +132,7 @@ function Login() {
               <button
                 type="button"
                 name="login"
-                onClick={handleLogin}
+                onClick={handleKakaoLogin}
                 className="btn round"
                 style={{
                   backgroundColor: "#ffffb5",
