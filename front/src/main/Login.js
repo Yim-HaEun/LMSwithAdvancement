@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../css/LoginTest.css";
 import LoginAxios from "../token/tokenAxios";
 import Footer from "./Footer";
+import axios from "axios";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -57,17 +58,18 @@ function Login() {
       }
     }
   };
-  
-    const Rest_api_key='1d11454b9e54fe7498a59635e8d3f681' //REST API KEY
-    const redirect_uri = 'http://localhost:3000/kakao/oauth' //Redirect URI
-    // oauth 요청 URL
-    const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`
-    const handleKakaoLogin = ()=>{
-        window.location.href = kakaoURL
-        checkLoginStatus();
-        navigate("/"); 
+      const Rest_api_key='REST API KEY' //REST API KEY
+      const redirect_uri = 'http://localhost:3000/kakao/oauth' //Redirect URI
+      const kakaoURL = `https://kauth.kakao.com/oauth/authorize?client_id=${Rest_api_key}&redirect_uri=${redirect_uri}&response_type=code`
+      const code = new URL(window.location.href).searchParams.get("code")
 
-  }
+      const handleKakaoLogin = ()=>{
+        window.location.href = kakaoURL
+    };
+
+
+  
+    
 
   return (
     <div>

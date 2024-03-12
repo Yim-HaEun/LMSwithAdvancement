@@ -38,7 +38,7 @@ export default function Control() {
           <Route path="chat/:post_no" element={<ChattingPage />} />
           <Route path="find" element={<FindUser />} />
           <Route path="admin" element={<Admin />} />
-          <Route path ="kakao" element={<Kakao/>}/>
+          <Route path ="kakao/oauth" element={<Kakao/>}/>
         </Routes>
       </BrowserRouter>
     </div>
