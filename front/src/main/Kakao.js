@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-import axios from "axios";
+import usersUserinfoAxios from '../token/tokenAxios';
+import axios, { Axios } from "axios";
 import Header from "./Header";
 import "../css/RegisterUser.css";
 import Required from "./img/required.png";
@@ -24,6 +24,7 @@ function Kakao(props) {
         role: "",
     });
     const [kakaoUser, setKakaoUser] = useState({ //KakaoDTO 가져와서 다시 swithUser로  넣어줄것임
+      code: "",
       Kemail: "",
       password: "",
       nickname:"",
@@ -90,7 +91,7 @@ function Kakao(props) {
       };
 
       useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchKakaoUser = async () => {
           try {
             // 서버에 사용자 정보를 가져오는 요청
             const response = await axios.get('http://localhost:8080/kakao/kakaoregister');
@@ -101,7 +102,7 @@ function Kakao(props) {
           }
         };
     
-        fetchUserData();
+        fetchKakaoUser();
       }, []);
       
       const handleAddUser = async () => {
@@ -201,7 +202,7 @@ function Kakao(props) {
              className="textInput"
              type="text"
              name="nickname"
-             value={swithUser.nickname}
+             value={kakaoUser.nickname}
              onChange={handleInputChange1}
              required
            />
