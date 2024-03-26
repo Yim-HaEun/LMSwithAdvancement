@@ -165,7 +165,7 @@ function Login() {
                   fontSize: "18px",
                 }}
               >
-                Github 로그인
+                Google 로그인
               </button>
             </div>
           </form>

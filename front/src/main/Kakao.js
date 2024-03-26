@@ -12,7 +12,8 @@ function Kakao(props) {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const code = new URL(window.location.href).searchParams.get("code");
-    
+    console.log(code);
+    const [accessTokenFetching, setAccessTokenFetching] = useState(false);
     const [swithUser, setNewUser] = useState({
         email: "",
         password: "",
@@ -24,9 +25,9 @@ function Kakao(props) {
         role: "",
     });
     const [kakaoUser, setKakaoUser] = useState({ //KakaoDTO 가져와서 다시 swithUser로  넣어줄것임
-      code: "",
+     
       Kemail: "",
-      password: "",
+      
       nickname:"",
     });
     const [confirmNickname, setConfirmNickname] = useState("");//nickname
@@ -34,7 +35,79 @@ function Kakao(props) {
     const [isButtonDisabled, setIsButtonDisabled] = useState('');
     
     const [isRegex, setIsRegex] = useState(false);
-    
+    const getAccessCode = async()=>{
+      if (accessTokenFetching) return; // Return early if fetching
+ 
+      console.log("getAccessToken 호출");
+      try {
+        setAccessTokenFetching(true); // Set fetching to true
+
+        const response = await axios.post("/kakao/oauth",
+            {
+                authorizationCode: code,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+        const accessToken = response.data.accessToken;
+        console.log("accessToken:", accessToken);
+
+        setKakaoUser({
+            ...kakaoUser,
+            accessToken: accessToken,
+        });
+
+        setAccessTokenFetching(false); // Reset fetching to false
+        getProfile();
+    } catch (error) {
+        console.error("Error:", error);
+        setAccessTokenFetching(false); // Reset fetching even in case of error
+    }
+    };
+    const getProfile = async () => {
+      try {
+          console.log("getProfile 호출");
+          // Check if accessToken is available
+          if (kakaoUser.accessToken) {
+              console.log("accessToken in getProfile:", kakaoUser.accessToken);
+              const response = await axios.get(
+                  "/kakao/oauth",
+                  {
+                      headers: {
+                          Authorization: `${kakaoUser.accessToken}`,
+                      },
+                  }
+              );
+              console.log("message:", response.data.message);
+              setKakaoUser({
+                  ...kakaoUser,
+                  kemail: response.data.result.kemail,
+                  nickname: response.data.result.nickname, 
+                  isLogin: true,
+              });
+              navigate("/");
+          } else {
+              console.log("No accessToken available");
+          }
+      } catch (error) {
+          console.error("Error:", error);
+      }
+  };
+  useEffect(() => {
+    if (code && !kakaoUser.accessToken) {
+        getAccessCode();
+    }
+}, [code, kakaoUser]);
+
+useEffect(() => {
+    if (kakaoUser.accessToken) {
+        getProfile();
+    }
+}, [kakaoUser]);
+
     const handleInputChange = (e) => {
         //e 자리값 밑에 target
         const { name, value } = e.target;
@@ -94,7 +167,7 @@ function Kakao(props) {
         const fetchKakaoUser = async () => {
           try {
             // 서버에 사용자 정보를 가져오는 요청
-            const response = await axios.get('http://localhost:8080/kakao/kakaoregister');
+            const response = await axios.get('http://localhost:8080/kakao/oauth');
             setKakaoUser(response.data); 
             console.log(kakaoUser);
           } catch (error) {
@@ -163,7 +236,7 @@ function Kakao(props) {
              className="textInput"
              type="text"
              name="email"
-             value={swithUser.email}
+             value={kakaoUser.Kemail}
              //onChange={handleInputChange}
              required
            />
@@ -186,7 +259,7 @@ function Kakao(props) {
            type="text"
            name="username"
            value={swithUser.username}
-           //onChange={handleInputChange}
+           onChange={handleInputChange}
            required
          />
        </div>
@@ -203,7 +276,7 @@ function Kakao(props) {
              type="text"
              name="nickname"
              value={kakaoUser.nickname}
-             onChange={handleInputChange1}
+             
              required
            />
 
